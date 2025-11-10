@@ -30,7 +30,7 @@ public class Main {
                     System.out.println(readers);
                     break;
                 case "EXIT":
-                    System.out.println("EXIT!");
+                    System.out.println("Goodbye!");
                     exitFlag = true;
                     break;
                 default:
