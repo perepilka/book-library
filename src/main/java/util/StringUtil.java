@@ -6,34 +6,34 @@ import java.util.HashMap;
 public class StringUtil {
 
     public void checkName(String name) throws InvalidNameException {
-        if(name == null || name.isEmpty())
+        if (name == null || name.isEmpty())
             throw new InvalidNameException("Name is empty");
-        if(name.length() < 6 || name.length() > 29)
+        if (name.length() < 6 || name.length() > 29)
             throw new InvalidNameException("Name should be between 6 and 29 characters");
-        if(!name.matches("^[a-zA-Z '-]*$"))
+        if (!name.matches("^[a-zA-Z '-]*$"))
             throw new InvalidNameException("Name must contain only letters, spaces, dashes, apostrophes");
     }
 
     public void checkTitle(String bookName) throws InvalidNameException {
-        if(bookName == null || bookName.isEmpty())
+        if (bookName == null || bookName.isEmpty())
             throw new InvalidNameException("Title is empty");
-        if(bookName.length() < 6 || bookName.length() > 99)
+        if (bookName.length() < 6 || bookName.length() > 99)
             throw new InvalidNameException("Title should be between 6 and 99 characters");
-        if(bookName.matches(".*[|/\\\\#%=+*_><].*"))
+        if (bookName.matches(".*[|/\\\\#%=+*_><].*"))
             throw new InvalidNameException("Title must not contain the following characters: |/\\#%=+*_><");
     }
 
-    public HashMap<String,String> splitBookString(String bookString) throws  InvalidNameException {
+    public HashMap<String, String> splitBookString(String bookString) throws InvalidNameException {
         String[] str = bookString.trim().split("/", 2);
 
         // Add this check
-        if(str.length < 2 || str[0].isEmpty() || str[1].isEmpty()) {
+        if (str.length < 2 || str[0].isEmpty() || str[1].isEmpty()) {
             throw new InvalidNameException("Input must contain both a title and an author, separated by '/'.");
         }
 
-        HashMap<String,String> map = new HashMap<>();
-        map.put("title",str[0]);
-        map.put("author",str[1]);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("title", str[0]);
+        map.put("author", str[1]);
         return map;
     }
 

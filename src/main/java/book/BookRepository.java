@@ -1,10 +1,14 @@
 package book;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookRepository {
 
-    List<Book> books;
+    List<Book> books = new ArrayList<>();
+
+    public BookRepository() {
+    }
 
     public BookRepository(List<Book> books) {
         this.books = books;

@@ -22,11 +22,10 @@ public class BookController {
 
     public Book createBook(String unformatted) throws InvalidNameException {
         HashMap<String, String> bookInfo = stringUtil.splitBookString(unformatted);
-            stringUtil.checkTitle(bookInfo.get("title"));
-            stringUtil.checkName(bookInfo.get("author"));
-            return bookService.save(bookInfo.get("title"), bookInfo.get("author"));
+        stringUtil.checkTitle(bookInfo.get("title"));
+        stringUtil.checkName(bookInfo.get("author"));
+        return bookService.save(bookInfo.get("title"), bookInfo.get("author"));
     }
-
 
 
 }
