@@ -1,23 +1,18 @@
-package book;
-
-public class Book {
+public class Reader {
 
     private Long id;
     private String name;
-    private String author;
 
-    public Book(Long id, String name, String author) {
+    public Reader(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.author = author;
     }
 
     @Override
     public String toString() {
-        return "Book{" +
+        return "Reader{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", author='" + author + '\'' +
                 '}';
     }
 }
