@@ -1,3 +1,6 @@
+import domain.Book;
+import domain.Reader;
+
 import java.util.List;
 import java.util.Scanner;
 
