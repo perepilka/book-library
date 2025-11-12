@@ -1,7 +1,6 @@
 package util;
 
 import javax.naming.InvalidNameException;
-import java.util.HashMap;
 
 public class StringUtil {
 
@@ -23,7 +22,7 @@ public class StringUtil {
             throw new InvalidNameException("Title must not contain the following characters: |/\\#%=+*_><");
     }
 
-    public HashMap<String, String> splitBookString(String bookString) throws InvalidNameException {
+    public String[] splitString(String bookString) throws InvalidNameException {
         String[] str = bookString.trim().split("/", 2);
 
         // Add this check
@@ -31,10 +30,7 @@ public class StringUtil {
             throw new InvalidNameException("Input must contain both a title and an author, separated by '/'.");
         }
 
-        HashMap<String, String> map = new HashMap<>();
-        map.put("title", str[0]);
-        map.put("author", str[1]);
-        return map;
+        return str;
     }
 
 

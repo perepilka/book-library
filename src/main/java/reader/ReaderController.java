@@ -19,9 +19,15 @@ public class ReaderController {
         return readerService.findAll();
     }
 
+    public Reader getReaderById(Long id){
+        return readerService.findById(id);
+    }
+
     public Reader createReader(String name) throws InvalidNameException {
         stringUtil.checkName(name);
         return readerService.save(name);
     }
+
+
 
 }

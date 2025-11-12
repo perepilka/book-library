@@ -50,8 +50,12 @@ public class Main {
                             PLEASE, SELECT ONE OF THE FOLLOWING ACTIONS BY TYPING THE OPTION’S NUMBER AND PRESSING ENTER KEY:
                             [1] SHOW ALL BOOKS IN THE LIBRARY
                             [2] SHOW ALL READERS REGISTERED IN THE LIBRARY
-                            [3] ADD NEW READER TO THE LIBRARY
-                            [4] ADD NEW BOOK TO THE LIBRARY
+                            [3] REGISTER NEW READER
+                            [4] ADD NEW BOOK
+                            [5] BORROW A BOOK TO A READER
+                            [6] RETURN A BOOK TO THE LIBRARY
+                            [7] SHOW ALL BORROWED BOOK BY USER ID
+                            [8] SHOW CURRENT READER OF A BOOK WITH ID
                             TYPE “EXIT” TO STOP THE PROGRAM AND EXIT!""");
 
             System.out.println(
@@ -72,6 +76,35 @@ public class Main {
                                 yield bookController.createBook(scanner.nextLine());
                             } catch (InvalidNameException e) {
                                 yield e.getMessage();
+                            }
+                        }
+                        case "5" -> {
+                            System.out.println("Please enter book id and reader id separated by “/”. Like this: BookId/ReaderId");
+                            try {
+                                yield bookController.borrowBook(scanner.nextLine());
+                            } catch (Exception e) {
+                                yield e.getMessage();
+                            }
+                        }
+                        case "6" -> {
+                            System.out.println("Please enter book id!");
+                            try {
+                                yield bookController.returnBook(Long.parseLong(scanner.nextLine()));
+                            } catch (IndexOutOfBoundsException e) {
+                                yield "There is no book with that ID!";
+                            }
+                        }
+                        case "7" -> {
+                            System.out.println("Please enter reader id!");
+                            yield bookController.getBorrowedBooksByReader(Long.parseLong(scanner.nextLine()));
+                        }
+                        case "8" -> {
+                            try {
+                                System.out.println("Please enter book id!");
+                                Long readerId = bookController.getReaderId(Long.parseLong(scanner.nextLine()));
+                                yield readerController.getReaderById(readerId);
+                            } catch (IndexOutOfBoundsException e) {
+                                yield "There is no book with that ID!";
                             }
                         }
                         case "EXIT" -> {

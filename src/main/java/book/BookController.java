@@ -3,7 +3,6 @@ package book;
 import util.StringUtil;
 
 import javax.naming.InvalidNameException;
-import java.util.HashMap;
 import java.util.List;
 
 public class BookController {
@@ -21,11 +20,26 @@ public class BookController {
     }
 
     public Book createBook(String unformatted) throws InvalidNameException {
-        HashMap<String, String> bookInfo = stringUtil.splitBookString(unformatted);
-        stringUtil.checkTitle(bookInfo.get("title"));
-        stringUtil.checkName(bookInfo.get("author"));
-        return bookService.save(bookInfo.get("title"), bookInfo.get("author"));
+        String[] str = stringUtil.splitString(unformatted);
+        stringUtil.checkTitle(str[0]);
+        stringUtil.checkName(str[1]);
+        return bookService.save(str[0], str[1]);
     }
 
+    public Book borrowBook(String unformatted) throws InvalidNameException {
+        String[] str = stringUtil.splitString(unformatted);
+        return bookService.borrowBook(Long.parseLong(str[0]), Long.parseLong(str[1]));
+    }
 
+    public Book returnBook(Long bookId) {
+        return bookService.returnBook(bookId);
+    }
+
+    public List<Book> getBorrowedBooksByReader(Long readerId) {
+        return bookService.getBooksBorrowedBy(readerId);
+    }
+
+    public Long getReaderId(Long bookId) {
+        return bookService.getReaderId(bookId);
+    }
 }

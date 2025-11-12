@@ -18,6 +18,10 @@ public class ReaderRepository {
         return readers;
     }
 
+    public Reader findById(Long id) throws IndexOutOfBoundsException{
+        return readers.get(Math.toIntExact(id));
+    }
+
     public Reader save(Reader reader) {
         readers.add(reader);
         return reader;

@@ -18,8 +18,17 @@ public class BookRepository {
         return books;
     }
 
+    public Book findById(Long id) throws IndexOutOfBoundsException{
+        return books.get(Math.toIntExact(id));
+    }
+
     public Book save(Book book) {
         books.add(book);
+        return book;
+    }
+
+    public Book updateBook(Book book) {
+        books.set(books.indexOf(book), book);
         return book;
     }
 }

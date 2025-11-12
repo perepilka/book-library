@@ -14,11 +14,14 @@ public class ReaderService {
         return readerRepository.findAll();
     }
 
+    public Reader findById(Long id) {
+        return readerRepository.findById(id);
+    }
+
     public Reader save(String name) {
         Long id = (long) findAll().size();
         Reader reader = new Reader(id, name);
         readerRepository.save(reader);
         return reader;
     }
-
 }
