@@ -102,6 +102,9 @@ public class Main {
                             try {
                                 System.out.println("Please enter book id!");
                                 Long readerId = bookController.getReaderId(Long.parseLong(scanner.nextLine()));
+                                if (readerId == null) {
+                                    yield "This book is not borrowed by anyone!";
+                                }
                                 yield readerController.getReaderById(readerId);
                             } catch (IndexOutOfBoundsException e) {
                                 yield "There is no book with that ID!";

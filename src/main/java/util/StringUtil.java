@@ -29,7 +29,8 @@ public class StringUtil {
         if (str.length < 2 || str[0].isEmpty() || str[1].isEmpty()) {
             throw new InvalidNameException("Input must contain both a title and an author, separated by '/'.");
         }
-
+        str[0] = str[0].trim();
+        str[1] = str[1].trim();
         return str;
     }
 

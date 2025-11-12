@@ -18,7 +18,7 @@ public class ReaderRepository {
         return readers;
     }
 
-    public Reader findById(Long id) throws IndexOutOfBoundsException{
+    public Reader findById(Long id) throws IndexOutOfBoundsException {
         return readers.get(Math.toIntExact(id));
     }
 

@@ -28,13 +28,13 @@ public class BookService {
     public Book borrowBook(Long bookId, Long readerId) {
         Book book = findById(bookId);
         book.setReaderId(readerId);
-        return bookRepository.save(book);
+        return bookRepository.updateBook(book);
     }
 
     public Book returnBook(Long bookId) {
         Book book = findById(bookId);
         book.setReaderId(null);
-        return bookRepository.save(book);
+        return bookRepository.updateBook(book);
     }
 
     public List<Book> getBooksBorrowedBy(Long readerId) {
