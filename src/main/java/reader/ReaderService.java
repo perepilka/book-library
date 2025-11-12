@@ -21,7 +21,6 @@ public class ReaderService {
     public Reader save(String name) {
         Long id = (long) findAll().size();
         Reader reader = new Reader(id, name);
-        readerRepository.save(reader);
-        return reader;
+        return readerRepository.save(reader);
     }
 }
