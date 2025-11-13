@@ -1,4 +1,4 @@
-package reader;
+package model;
 
 public record Reader(Long id, String name) {
 

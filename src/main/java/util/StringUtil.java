@@ -25,12 +25,13 @@ public class StringUtil {
     public String[] splitString(String bookString) throws InvalidNameException {
         String[] str = bookString.trim().split("/", 2);
 
-        // Add this check
         if (str.length < 2 || str[0].isEmpty() || str[1].isEmpty()) {
             throw new InvalidNameException("Input must contain both a title and an author, separated by '/'.");
         }
+
         str[0] = str[0].trim();
         str[1] = str[1].trim();
+
         return str;
     }
 

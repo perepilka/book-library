@@ -1,18 +1,13 @@
-package book;
+package repository;
+
+import model.Book;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookRepository {
 
-    List<Book> books = new ArrayList<>();
-
-    public BookRepository() {
-    }
-
-    public BookRepository(List<Book> books) {
-        this.books = books;
-    }
+    private List<Book> books = new ArrayList<>();
 
     public List<Book> findAll() {
         return books;

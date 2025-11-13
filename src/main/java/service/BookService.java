@@ -1,13 +1,20 @@
-package book;
+package service;
 
+import model.Book;
+import repository.BookRepository;
+import util.StringUtil;
+
+import javax.naming.InvalidNameException;
 import java.util.List;
 
 public class BookService {
 
     private BookRepository bookRepository;
+    private StringUtil stringUtil;
 
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    public BookService(StringUtil stringUtil) {
+        this.bookRepository = new BookRepository();
+        this.stringUtil = stringUtil;
     }
 
     public List<Book> findAll() {
@@ -18,16 +25,19 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public Book save(String name, String author) {
+    public Book save(String unformatted) throws InvalidNameException {
+        String[] str = stringUtil.splitString(unformatted);
+        stringUtil.checkTitle(str[0]);
+        stringUtil.checkName(str[1]);
         Long id = (long) findAll().size();
-        Book book = new Book(id, name, author);
-        bookRepository.save(book);
-        return book;
+        Book book = new Book(id, str[0], str[1]);
+        return bookRepository.save(book);
     }
 
-    public Book borrowBook(Long bookId, Long readerId) {
-        Book book = findById(bookId);
-        book.setReaderId(readerId);
+    public Book borrowBook(String unformatted) throws InvalidNameException {
+        String[] str = stringUtil.splitString(unformatted);
+        Book book = findById(Long.parseLong(str[0]));
+        book.setReaderId(Long.parseLong(str[1]));
         return bookRepository.updateBook(book);
     }
 
