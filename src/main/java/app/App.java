@@ -1,11 +1,13 @@
 package app;
 
+import exception.BookNotFoundException;
+import exception.InvalidStringException;
+import exception.ReaderNotFoundException;
 import model.Book;
+import model.Reader;
 import service.BookService;
 import service.ReaderService;
-import util.StringUtil;
 
-import javax.naming.InvalidNameException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,24 +15,24 @@ public class App {
 
     private static ReaderService readerService;
     private static BookService bookService;
+    private static Scanner scanner;
+
 
     public App() {
-        StringUtil stringUtil = new StringUtil();
-        readerService = new ReaderService(stringUtil);
-        bookService = new BookService(stringUtil);
+        readerService = new ReaderService();
+        bookService = new BookService(readerService);
+        scanner = new Scanner(System.in);
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
-
-        try {
-            seedReaders(readerService);
-            seedBooks(bookService);
-        } catch (InvalidNameException e) {
-            System.out.println("Exception catch in seeding. Exception message: " + e.getMessage());
-        }
         System.out.println("WELCOME TO THE LIBRARY!");
 
+        menu();
+
+        scanner.close();
+    }
+
+    private void menu() {
         boolean exitFlag = false;
         while (!exitFlag) {
             System.out.println(
@@ -47,58 +49,54 @@ public class App {
                             TYPE “EXIT” TO STOP THE PROGRAM AND EXIT!""");
 
             System.out.println(
+
                     switch (scanner.nextLine()) {
-                        case "1" -> bookService.findAll();
-                        case "2" -> readerService.findAll();
+                        case "1" -> getAllBooks();
+                        case "2" -> getAllReaders();
                         case "3" -> {
-                            System.out.println("Please enter new reader full name!");
                             try {
-                                yield readerService.save(scanner.nextLine());
-                            } catch (InvalidNameException e) {
+                                yield registerNewReader();
+                            } catch (InvalidStringException e) {
                                 yield e.getMessage();
                             }
                         }
                         case "4" -> {
-                            System.out.println("Please enter new book name and author separated by “/”. Like this: name / author");
                             try {
-                                yield bookService.save(scanner.nextLine());
-                            } catch (InvalidNameException e) {
+                                yield addNewBook();
+                            } catch (InvalidStringException e) {
                                 yield e.getMessage();
                             }
                         }
                         case "5" -> {
-                            System.out.println("Please enter book id and reader id separated by “/”. Like this: BookId/ReaderId");
                             try {
-                                yield bookService.borrowBook(scanner.nextLine());
-                            } catch (Exception e) {
+                                yield borrowBook();
+                            } catch (RuntimeException e) {
                                 yield e.getMessage();
                             }
                         }
                         case "6" -> {
-                            System.out.println("Please enter book id!");
                             try {
-                                yield bookService.returnBook(Long.parseLong(scanner.nextLine()));
-                            } catch (IndexOutOfBoundsException e) {
-                                yield "There is no book with that ID!";
+                                yield returnBook();
+                            } catch (RuntimeException e) {
+                                yield e.getMessage();
                             }
                         }
                         case "7" -> {
-                            System.out.println("Please enter reader id!");
-                            List<Book> books = bookService.getBooksBorrowedBy(Long.parseLong(scanner.nextLine()));
-                            if  (books.isEmpty()) {
-                                yield "This reader has not borrowed books";
-                            } else yield books;
+                            try {
+                                List<Book> books = getBorrowedBooks();
+                                if (books.isEmpty()) {
+                                    yield "This reader has not borrowed books";
+                                } else yield books;
+                            } catch (RuntimeException e) {
+                                yield e.getMessage();
+                            }
+
                         }
                         case "8" -> {
                             try {
-                                System.out.println("Please enter book id!");
-                                Long readerId = bookService.getReaderId(Long.parseLong(scanner.nextLine()));
-                                if (readerId == null) {
-                                    yield "This book is not borrowed by anyone!";
-                                }
-                                yield readerService.findById(readerId);
-                            } catch (IndexOutOfBoundsException e) {
-                                yield "There is no book with that ID!";
+                                yield getBookReader();
+                            } catch (RuntimeException e) {
+                                yield e.getMessage();
                             }
                         }
                         case "EXIT" -> {
@@ -109,19 +107,51 @@ public class App {
                     }
             );
         }
-        scanner.close();
     }
 
-    private void seedBooks(BookService bookService) throws InvalidNameException {
-        bookService.save("A Tale of Two Cities/Charles Dickens");
-        bookService.save("The Little Prince/The Little Prince");
-        bookService.save("The Alchemist/Paulo Coelho");
+    private List<Book> getAllBooks() {
+        return bookService.findAll();
     }
 
-    private void seedReaders(ReaderService readerService) throws InvalidNameException {
-        readerService.save("Lena Cano");
-        readerService.save("Terry Xiong");
-        readerService.save("Amayah Burgess");
+    private List<Reader> getAllReaders() {
+        return readerService.findAll();
     }
 
+    private Reader registerNewReader() {
+        System.out.println("Please enter new reader full name!");
+
+        return readerService.save(scanner.nextLine());
+    }
+
+    private Book addNewBook() {
+        System.out.println("Please enter new book name and author separated by “/”. Like this: name / author");
+
+        return bookService.save(scanner.nextLine());
+    }
+
+    private Book borrowBook() {
+        System.out.println("Please enter book id and reader id separated by “/”. Like this: BookId/ReaderId");
+
+        return bookService.borrowBook(scanner.nextLine());
+    }
+
+    private Book returnBook() {
+        System.out.println("Please enter book id!");
+
+        return bookService.returnBook(scanner.nextLine());
+    }
+
+    private List<Book> getBorrowedBooks() {
+        System.out.println("Please enter reader id!");
+
+        return bookService.getBooksBorrowedBy(scanner.nextLine());
+    }
+
+    private Reader getBookReader() {
+        System.out.println("Please enter book id!");
+
+        Long readerId = bookService.getReaderId(scanner.nextLine());
+
+        return readerService.findById(readerId);
+    }
 }

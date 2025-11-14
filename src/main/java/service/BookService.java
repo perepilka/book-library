@@ -1,20 +1,21 @@
 package service;
 
+import exception.BookNotFoundException;
 import model.Book;
 import repository.BookRepository;
 import util.StringUtil;
 
-import javax.naming.InvalidNameException;
 import java.util.List;
+import java.util.Optional;
 
 public class BookService {
 
-    private BookRepository bookRepository;
-    private StringUtil stringUtil;
+    private final BookRepository bookRepository;
+    private ReaderService readerService;
 
-    public BookService(StringUtil stringUtil) {
+    public BookService(ReaderService readerService) {
         this.bookRepository = new BookRepository();
-        this.stringUtil = stringUtil;
+        this.readerService = readerService;
     }
 
     public List<Book> findAll() {
@@ -22,38 +23,61 @@ public class BookService {
     }
 
     public Book findById(Long id) {
-        return bookRepository.findById(id);
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()) {
+            return book.get();
+        } else throw new BookNotFoundException("Book not found, id: " + id);
     }
 
-    public Book save(String unformatted) throws InvalidNameException {
-        String[] str = stringUtil.splitString(unformatted);
-        stringUtil.checkTitle(str[0]);
-        stringUtil.checkName(str[1]);
-        Long id = (long) findAll().size();
-        Book book = new Book(id, str[0], str[1]);
-        return bookRepository.save(book);
+    public Book save(String unformatted) {
+        String[] str = StringUtil.splitString(unformatted);
+        StringUtil.checkTitle(str[0]);
+        StringUtil.checkName(str[1]);
+        return bookRepository.save(new Book(null, str[0], str[1]));
     }
 
-    public Book borrowBook(String unformatted) throws InvalidNameException {
-        String[] str = stringUtil.splitString(unformatted);
+    public Book borrowBook(String unformatted) {
+
+        String[] str = StringUtil.splitString(unformatted);
+
+        StringUtil.checkId(str[0]);
+        StringUtil.checkId(str[1]);
+
+        var readerId = Long.parseLong(str[1]);
+
         Book book = findById(Long.parseLong(str[0]));
-        book.setReaderId(Long.parseLong(str[1]));
+
+        if (book.getReaderId() != null) throw new RuntimeException("This book is already borrowed!");
+
+        readerService.findById(readerId);
+
+        book.setReaderId(readerId);
         return bookRepository.updateBook(book);
     }
 
-    public Book returnBook(Long bookId) {
-        Book book = findById(bookId);
+    public Book returnBook(String string) {
+        StringUtil.checkId(string);
+
+        Book book = findById(Long.parseLong(string));
         book.setReaderId(null);
         return bookRepository.updateBook(book);
     }
 
-    public List<Book> getBooksBorrowedBy(Long readerId) {
+    public List<Book> getBooksBorrowedBy(String string) {
+        StringUtil.checkId(string);
+        Long readerId = Long.parseLong(string);
+        readerService.findById(readerId);
+
         return findAll().stream()
                 .filter(book -> readerId.equals(book.getReaderId()))
                 .toList();
     }
 
-    public Long getReaderId(Long bookId) {
-        return bookRepository.findById(bookId).getReaderId();
+    public Long getReaderId(String string) {
+        StringUtil.checkId(string);
+        var readerId = findById(Long.parseLong(string)).getReaderId();
+        if (readerId == null) throw new RuntimeException("Book is not borrowed!");
+
+        return readerId;
     }
 }

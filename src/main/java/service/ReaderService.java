@@ -1,20 +1,19 @@
 package service;
 
+import exception.ReaderNotFoundException;
 import model.Reader;
 import repository.ReaderRepository;
 import util.StringUtil;
 
-import javax.naming.InvalidNameException;
 import java.util.List;
+import java.util.Optional;
 
 public class ReaderService {
 
     private ReaderRepository readerRepository;
-    private StringUtil stringUtil;
 
-    public ReaderService( StringUtil stringUtil) {
+    public ReaderService() {
         this.readerRepository = new ReaderRepository();
-        this.stringUtil = stringUtil;
     }
 
     public List<Reader> findAll() {
@@ -22,14 +21,16 @@ public class ReaderService {
     }
 
     public Reader findById(Long id) {
-        return readerRepository.findById(id);
+        Optional<Reader> reader = readerRepository.findById(id);
+        if (reader.isPresent()) {
+            return reader.get();
+        } else throw new ReaderNotFoundException("Reader not found, id: " + id);
     }
 
-    public Reader save(String name) throws InvalidNameException {
+    public Reader save(String name) {
         name = name.trim();
-        stringUtil.checkName(name);
-        Long id = (long) findAll().size();
-        Reader reader = new Reader(id, name);
-        return readerRepository.save(reader);
+        StringUtil.checkName(name);
+
+        return readerRepository.save(new Reader(null, name));
     }
 }
