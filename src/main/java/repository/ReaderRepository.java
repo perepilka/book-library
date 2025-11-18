@@ -30,8 +30,8 @@ public class ReaderRepository {
     }
 
     private void seed() {
-        save(new Reader(null, "Lena Cano"));
-        save(new Reader(null, "Terry Xiong"));
-        save(new Reader(null, "Amayah Burgess"));
+        save(new Reader("Lena Cano"));
+        save(new Reader("Terry Xiong"));
+        save(new Reader("Amayah Burgess"));
     }
 }

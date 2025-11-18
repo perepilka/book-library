@@ -1,8 +1,7 @@
 package app;
 
-import exception.BookNotFoundException;
-import exception.InvalidStringException;
-import exception.ReaderNotFoundException;
+import exception.LibraryException;
+import exception.ObjectNotFoundException;
 import model.Book;
 import model.Reader;
 import service.BookService;
@@ -13,27 +12,20 @@ import java.util.Scanner;
 
 public class App {
 
-    private static ReaderService readerService;
-    private static BookService bookService;
-    private static Scanner scanner;
+    private ReaderService readerService = new ReaderService();
+    private BookService bookService = new BookService(readerService);
+    private Scanner scanner = new Scanner(System.in);
 
+    boolean exitFlag = false;
 
-    public App() {
-        readerService = new ReaderService();
-        bookService = new BookService(readerService);
-        scanner = new Scanner(System.in);
-    }
 
     public void run() {
         System.out.println("WELCOME TO THE LIBRARY!");
-
         menu();
-
         scanner.close();
     }
 
     private void menu() {
-        boolean exitFlag = false;
         while (!exitFlag) {
             System.out.println(
                     """
@@ -48,110 +40,90 @@ public class App {
                             [8] SHOW CURRENT READER OF A BOOK WITH ID
                             TYPE “EXIT” TO STOP THE PROGRAM AND EXIT!""");
 
-            System.out.println(
-
-                    switch (scanner.nextLine()) {
-                        case "1" -> getAllBooks();
-                        case "2" -> getAllReaders();
-                        case "3" -> {
-                            try {
-                                yield registerNewReader();
-                            } catch (InvalidStringException e) {
-                                yield e.getMessage();
-                            }
-                        }
-                        case "4" -> {
-                            try {
-                                yield addNewBook();
-                            } catch (InvalidStringException e) {
-                                yield e.getMessage();
-                            }
-                        }
-                        case "5" -> {
-                            try {
-                                yield borrowBook();
-                            } catch (RuntimeException e) {
-                                yield e.getMessage();
-                            }
-                        }
-                        case "6" -> {
-                            try {
-                                yield returnBook();
-                            } catch (RuntimeException e) {
-                                yield e.getMessage();
-                            }
-                        }
-                        case "7" -> {
-                            try {
-                                List<Book> books = getBorrowedBooks();
-                                if (books.isEmpty()) {
-                                    yield "This reader has not borrowed books";
-                                } else yield books;
-                            } catch (RuntimeException e) {
-                                yield e.getMessage();
-                            }
-
-                        }
-                        case "8" -> {
-                            try {
-                                yield getBookReader();
-                            } catch (RuntimeException e) {
-                                yield e.getMessage();
-                            }
-                        }
-                        case "EXIT" -> {
-                            exitFlag = true;
-                            yield "Goodbye!";
-                        }
-                        default -> "WRONG INPUT!";
-                    }
-            );
+            switch (scanner.nextLine().trim().toUpperCase()) {
+                case "1" -> getAllBooks();
+                case "2" -> getAllReaders();
+                case "3" -> registerNewReader();
+                case "4" -> addNewBook();
+                case "5" -> borrowBook();
+                case "6" -> returnBook();
+                case "7" -> getBorrowedBooks();
+                case "8" -> getBookReader();
+                case "EXIT" -> exit();
+                default -> System.out.println("WRONG INPUT!");
+            }
         }
     }
 
-    private List<Book> getAllBooks() {
-        return bookService.findAll();
+    private void getAllBooks() {
+        System.out.println(bookService.findAll());
     }
 
-    private List<Reader> getAllReaders() {
-        return readerService.findAll();
+    private void getAllReaders() {
+        System.out.println(readerService.findAll());
     }
 
-    private Reader registerNewReader() {
+    private void registerNewReader() {
         System.out.println("Please enter new reader full name!");
-
-        return readerService.save(scanner.nextLine());
+        try {
+            System.out.println(readerService.save(scanner.nextLine()));
+        } catch (LibraryException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private Book addNewBook() {
+    private void addNewBook() {
         System.out.println("Please enter new book name and author separated by “/”. Like this: name / author");
-
-        return bookService.save(scanner.nextLine());
+        try {
+            System.out.println(bookService.save(scanner.nextLine()));
+        } catch (LibraryException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private Book borrowBook() {
+    private void borrowBook() {
         System.out.println("Please enter book id and reader id separated by “/”. Like this: BookId/ReaderId");
-
-        return bookService.borrowBook(scanner.nextLine());
+        try {
+            System.out.println(bookService.borrowBook(scanner.nextLine()));
+        } catch (LibraryException | ObjectNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private Book returnBook() {
+    private void returnBook() {
         System.out.println("Please enter book id!");
-
-        return bookService.returnBook(scanner.nextLine());
+        try {
+            System.out.println(bookService.returnBook(scanner.nextLine()));
+        } catch (LibraryException | ObjectNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private List<Book> getBorrowedBooks() {
+    private void getBorrowedBooks() {
         System.out.println("Please enter reader id!");
-
-        return bookService.getBooksBorrowedBy(scanner.nextLine());
+        try {
+            List<Book> books = bookService.getBooksBorrowedBy(scanner.nextLine());
+            if (books.isEmpty()) {
+                System.out.println("This reader has not borrowed books");
+            } else System.out.println(books);
+        } catch (LibraryException | ObjectNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private Reader getBookReader() {
+    private void getBookReader() {
         System.out.println("Please enter book id!");
-
-        Long readerId = bookService.getReaderId(scanner.nextLine());
-
-        return readerService.findById(readerId);
+        try {
+            Reader reader = bookService.getReaderByBookId(scanner.nextLine());
+            System.out.println(reader);
+        } catch (ObjectNotFoundException | LibraryException exception) {
+            System.out.println(exception.getMessage());
+        }
     }
+
+    private void exit() {
+        exitFlag = true;
+        System.out.println("Goodbye!");
+    }
+
 }

@@ -9,7 +9,6 @@ import java.util.Optional;
 public class BookRepository {
 
     private List<Book> books = new ArrayList<>();
-    private long idCounter = 0;
 
     public BookRepository() {
         seed();
@@ -24,7 +23,6 @@ public class BookRepository {
     }
 
     public Book save(Book book) {
-        book.setId(idCounter++);
         books.add(book);
         return book;
     }
@@ -39,8 +37,8 @@ public class BookRepository {
     }
 
     private void seed() {
-        save(new Book(null, "A Tale of Two Cities", "Charles Dickens"));
-        save(new Book(null, "The Little Prince", "The Little Prince"));
-        save(new Book(null, "The Alchemist", "Paulo Coelho"));
+        save(new Book("A Tale of Two Cities", "Charles Dickens"));
+        save(new Book("The Little Prince", "The Little Prince"));
+        save(new Book("The Alchemist", "Paulo Coelho"));
     }
 }

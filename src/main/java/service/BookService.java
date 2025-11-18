@@ -1,7 +1,9 @@
 package service;
 
-import exception.BookNotFoundException;
+import exception.LibraryException;
+import exception.ObjectNotFoundException;
 import model.Book;
+import model.Reader;
 import repository.BookRepository;
 import util.StringUtil;
 
@@ -22,18 +24,15 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Book findById(Long id) {
-        Optional<Book> book = bookRepository.findById(id);
-        if (book.isPresent()) {
-            return book.get();
-        } else throw new BookNotFoundException("Book not found, id: " + id);
+    public Optional<Book> findById(Long id) {
+        return bookRepository.findById(id);
     }
 
     public Book save(String unformatted) {
         String[] str = StringUtil.splitString(unformatted);
         StringUtil.checkTitle(str[0]);
         StringUtil.checkName(str[1]);
-        return bookRepository.save(new Book(null, str[0], str[1]));
+        return bookRepository.save(new Book(str[0], str[1]));
     }
 
     public Book borrowBook(String unformatted) {
@@ -45,11 +44,11 @@ public class BookService {
 
         var readerId = Long.parseLong(str[1]);
 
-        Book book = findById(Long.parseLong(str[0]));
+        Book book = findById(Long.parseLong(str[0])).orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + str[0]));
 
-        if (book.getReaderId() != null) throw new RuntimeException("This book is already borrowed!");
+        if (book.getReaderId() != null) throw new LibraryException("This book is already borrowed!");
 
-        readerService.findById(readerId);
+        readerService.findById(readerId).orElseThrow(() -> new ObjectNotFoundException("Reader not found, id: " + readerId));
 
         book.setReaderId(readerId);
         return bookRepository.updateBook(book);
@@ -58,7 +57,7 @@ public class BookService {
     public Book returnBook(String string) {
         StringUtil.checkId(string);
 
-        Book book = findById(Long.parseLong(string));
+        Book book = findById(Long.parseLong(string)).orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + string));
         book.setReaderId(null);
         return bookRepository.updateBook(book);
     }
@@ -73,11 +72,17 @@ public class BookService {
                 .toList();
     }
 
-    public Long getReaderId(String string) {
+    public Long getReaderIdByBookId(String string) {
         StringUtil.checkId(string);
-        var readerId = findById(Long.parseLong(string)).getReaderId();
-        if (readerId == null) throw new RuntimeException("Book is not borrowed!");
+        Book book = findById(Long.parseLong(string)).orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + string));
+        var readerId = book.getReaderId();
+        if (readerId == null) throw new LibraryException("Book is not borrowed!");
 
         return readerId;
+    }
+
+    public Reader getReaderByBookId(String string) {
+        Long readerId = getReaderIdByBookId(string);
+        return readerService.findById(readerId).orElseThrow(() -> new ObjectNotFoundException("Reader not found, id: " + readerId));
     }
 }

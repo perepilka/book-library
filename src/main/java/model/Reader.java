@@ -4,9 +4,10 @@ public class Reader {
 
     private Long id;
     private String name;
+    private static long counter = 0;
 
-    public Reader(Long id, String name) {
-        this.id = id;
+    public Reader(String name) {
+        this.id = counter++;
         this.name = name;
     }
 

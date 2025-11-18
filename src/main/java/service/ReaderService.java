@@ -1,6 +1,5 @@
 package service;
 
-import exception.ReaderNotFoundException;
 import model.Reader;
 import repository.ReaderRepository;
 import util.StringUtil;
@@ -20,17 +19,14 @@ public class ReaderService {
         return readerRepository.findAll();
     }
 
-    public Reader findById(Long id) {
-        Optional<Reader> reader = readerRepository.findById(id);
-        if (reader.isPresent()) {
-            return reader.get();
-        } else throw new ReaderNotFoundException("Reader not found, id: " + id);
+    public Optional<Reader> findById(Long id) {
+        return readerRepository.findById(id);
     }
 
     public Reader save(String name) {
         name = name.trim();
         StringUtil.checkName(name);
 
-        return readerRepository.save(new Reader(null, name));
+        return readerRepository.save(new Reader(name));
     }
 }
