@@ -55,8 +55,7 @@ public class BookService {
         .orElseThrow(() -> new ObjectNotFoundException("Reader not found, id: " + readerId));
 
     book.setReaderId(readerId);
-    return bookRepository.updateBook(book)
-        .orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + book.getId()));
+    return bookRepository.updateBook(book);
   }
 
   public Book returnBook(String string) {
@@ -65,8 +64,7 @@ public class BookService {
     Book book = findById(Long.parseLong(string)).orElseThrow(
         () -> new ObjectNotFoundException("Book not found, id: " + string));
     book.setReaderId(null);
-    return bookRepository.updateBook(book)
-        .orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + book.getId()));
+    return bookRepository.updateBook(book);
   }
 
   public List<Book> getBooksBorrowedBy(String string) {

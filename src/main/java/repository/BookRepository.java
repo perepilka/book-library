@@ -1,5 +1,6 @@
 package repository;
 
+import exception.ObjectNotFoundException;
 import model.Book;
 
 import java.util.ArrayList;
@@ -27,14 +28,14 @@ public class BookRepository {
     return book;
   }
 
-  public Optional<Book> updateBook(Book book) {
-    return findById(book.getId())
-        .map(b -> {
-      b.setName(book.getName());
-      b.setAuthor(book.getAuthor());
-      b.setReaderId(book.getReaderId());
-      return b;
-    });
+  public Book updateBook(Book bookToUpdate) {
+    var id = bookToUpdate.getId();
+    var existingBook = findById(id)
+        .orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + id));
+    existingBook.setName(bookToUpdate.getName());
+    existingBook.setAuthor(bookToUpdate.getAuthor());
+    existingBook.setReaderId(bookToUpdate.getReaderId());
+    return save(existingBook);
   }
 
   private void seed() {

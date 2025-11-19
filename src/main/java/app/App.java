@@ -16,7 +16,7 @@ public class App {
   private BookService bookService = new BookService(readerService);
   private Scanner scanner = new Scanner(System.in);
 
-  boolean exitFlag = false;
+  private boolean exitFlag = false;
 
 
   public void run() {
@@ -46,8 +46,8 @@ public class App {
         case "4" -> addNewBook();
         case "5" -> borrowBook();
         case "6" -> returnBook();
-        case "7" -> getBorrowedBooks();
-        case "8" -> getBookReader();
+        case "7" -> printBorrowedBooks();
+        case "8" -> printBookReader();
         case "EXIT" -> exit();
         default -> System.out.println("WRONG INPUT!");
       }
@@ -104,7 +104,7 @@ public class App {
     }
   }
 
-  private void getBorrowedBooks() {
+  private void printBorrowedBooks() {
     System.out.println("Please enter reader id!");
     try {
       List<Book> books = bookService.getBooksBorrowedBy(scanner.nextLine());
@@ -118,7 +118,7 @@ public class App {
     }
   }
 
-  private void getBookReader() {
+  private void printBookReader() {
     System.out.println("Please enter book id!");
     try {
       Reader reader = bookService.getReaderByBookId(scanner.nextLine());
