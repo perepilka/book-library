@@ -27,13 +27,14 @@ public class BookRepository {
     return book;
   }
 
-  public Book updateBook(Book book) {
-    findById(book.getId()).ifPresent(b -> {
+  public Optional<Book> updateBook(Book book) {
+    return findById(book.getId())
+        .map(b -> {
       b.setName(book.getName());
       b.setAuthor(book.getAuthor());
       b.setReaderId(book.getReaderId());
+      return b;
     });
-    return book;
   }
 
   private void seed() {
