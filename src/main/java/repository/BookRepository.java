@@ -31,11 +31,11 @@ public class BookRepository {
   public Book updateBook(Book bookToUpdate) {
     var id = bookToUpdate.getId();
     var existingBook = findById(id)
-        .orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + id));
+            .orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + id));
     existingBook.setName(bookToUpdate.getName());
     existingBook.setAuthor(bookToUpdate.getAuthor());
     existingBook.setReaderId(bookToUpdate.getReaderId());
-    return save(existingBook);
+    return existingBook;
   }
 
   private void seed() {
