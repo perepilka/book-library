@@ -11,10 +11,6 @@ public class ReaderRepository {
   List<Reader> readers = new ArrayList<>();
   private long idCounter = 0;
 
-  public ReaderRepository() {
-    seed();
-  }
-
   public List<Reader> findAll() {
     return readers;
   }
@@ -29,9 +25,5 @@ public class ReaderRepository {
     return reader;
   }
 
-  private void seed() {
-    save(new Reader("Lena Cano"));
-    save(new Reader("Terry Xiong"));
-    save(new Reader("Amayah Burgess"));
-  }
+
 }

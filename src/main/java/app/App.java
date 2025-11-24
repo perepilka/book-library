@@ -9,6 +9,7 @@ import service.ReaderService;
 
 import java.util.List;
 import java.util.Scanner;
+import util.DatabaseInitializer;
 
 public class App {
 

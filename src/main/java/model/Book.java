@@ -8,12 +8,14 @@ public class Book {
   private Long readerId;
   private static long count = 0;
 
-  public Book(String name, String author) {
-    this.id = count++;
+  public Book(Long id, String name, String author, Long readerId) {
+    this.id = id;
     this.name = name;
     this.author = author;
-    this.readerId = null;
+    this.readerId = readerId;
   }
+
+
 
   public Long getId() {
     return id;
