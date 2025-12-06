@@ -12,12 +12,10 @@ public class DatabaseInitializer {
 
   public static void initDatabase() {
     try{
-      String sql = getSqlFromFile("schem.sql");
+      String sql = getSqlFromFile("schema.sql");
       executeSqlScript(sql);
       sql = getSqlFromFile("data.sql");
       executeSqlScript(sql);
-
-
     }catch (Exception e){
       e.printStackTrace();
     }
@@ -39,10 +37,9 @@ public class DatabaseInitializer {
   }
 
   private static void executeSqlScript(String sql) throws SQLException {
-    try (Connection conn = DatabasePool.getConnection();
+    try (Connection conn = DatabaseConnection.getConnection();
         Statement stmt = conn.createStatement()) {
 
-      // Split by semicolon and execute each statement
       String[] statements = sql.split(";");
 
       for (String statement : statements) {

@@ -2,11 +2,17 @@ package model;
 
 public class Book {
 
-  private final Long id;
+  private Long id;
   private String name;
   private String author;
   private Long readerId;
-  private static long count = 0;
+
+  public Book(String name, String author) {
+    id = null;
+    this.name = name;
+    this.author = author;
+    readerId = null;
+  }
 
   public Book(Long id, String name, String author, Long readerId) {
     this.id = id;
@@ -14,8 +20,6 @@ public class Book {
     this.author = author;
     this.readerId = readerId;
   }
-
-
 
   public Long getId() {
     return id;
@@ -31,6 +35,10 @@ public class Book {
 
   public Long getReaderId() {
     return readerId;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public void setName(String name) {

@@ -32,8 +32,7 @@ public class BookService {
     String[] str = StringUtil.splitString(unformatted);
     StringUtil.checkTitle(str[0]);
     StringUtil.checkName(str[1]);
-//    return bookRepository.save(new Book(str[0], str[1]));
-    return new Book(null, "dfsdfsd", "dfsdfsd", 999L);
+    return bookRepository.save(new Book(str[0], str[1]));
   }
 
   public Book borrowBook(String unformatted) {

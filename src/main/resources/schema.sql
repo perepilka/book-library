@@ -11,5 +11,5 @@ create table if not exists books(
     foreign key (reader_id) references readers(id)
 );
 
-create index reader_id_index on books(reader_id);
+create index if not exists reader_id_index on books(reader_id);
 

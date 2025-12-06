@@ -21,6 +21,7 @@ public class App {
 
 
   public void run() {
+    DatabaseInitializer.initDatabase();
     System.out.println("WELCOME TO THE LIBRARY!");
     menu();
     scanner.close();

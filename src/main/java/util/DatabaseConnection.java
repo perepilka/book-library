@@ -3,9 +3,10 @@ package util;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabasePool {
+public class DatabaseConnection {
 
   private static final String DB_NAME = System.getenv("DB_NAME");
   private static final String DB_USER = System.getenv("DB_USER");
@@ -15,27 +16,10 @@ public class DatabasePool {
 
   private static final String URL = "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
 
-  private static HikariDataSource dataSource;
-
-  static {
-    HikariConfig config = new HikariConfig();
-    config.setJdbcUrl(URL);
-    config.setUsername(DB_USER);
-    config.setPassword(DB_PASSWORD);
-
-    dataSource = new HikariDataSource(config);
-
-    DatabaseInitializer.initDatabase();
-  }
-
   public static Connection getConnection() throws SQLException {
-    return dataSource.getConnection();
+    return DriverManager.getConnection(URL, DB_USER, DB_PASSWORD);
   }
 
-  public static void closeConnection() {
-    if (dataSource != null) {
-      dataSource.close();
-    }
-  } 
+
 
 }
