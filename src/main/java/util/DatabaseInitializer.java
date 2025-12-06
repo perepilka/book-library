@@ -17,7 +17,7 @@ public class DatabaseInitializer {
       sql = getSqlFromFile("data.sql");
       executeSqlScript(sql);
     }catch (Exception e){
-      e.printStackTrace();
+      System.err.println(e.getMessage());
     }
 
   }

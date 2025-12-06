@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collections;
 import model.Reader;
 
@@ -18,7 +17,7 @@ public class ReaderRepository {
   public List<Reader> findAll() {
     try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM readers");
-        ResultSet rs = stmt.executeQuery();) {
+        ResultSet rs = stmt.executeQuery()) {
       List<Reader> readers = new ArrayList<>();
       while (rs.next()) {
         Long id = rs.getLong("id");
@@ -28,7 +27,7 @@ public class ReaderRepository {
       }
       return readers;
     } catch (SQLException e) {
-      e.printStackTrace();
+      System.err.println(e.getMessage());
       return Collections.emptyList();
     }
   }

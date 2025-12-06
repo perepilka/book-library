@@ -19,7 +19,7 @@ public class BookRepository {
   public List<Book> findAll() {
     try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM books");
-        ResultSet rs = stmt.executeQuery();) {
+        ResultSet rs = stmt.executeQuery()) {
       List<Book> books = new ArrayList<>();
       while (rs.next()) {
         Long id = rs.getLong("id");
@@ -31,7 +31,7 @@ public class BookRepository {
       }
       return books;
     } catch (SQLException e) {
-      e.printStackTrace();
+      System.err.println(e.getMessage());
       return Collections.emptyList();
     }
   }
@@ -53,7 +53,7 @@ public class BookRepository {
         }
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      System.err.println(e.getMessage());
     }
     return Optional.empty();
   }

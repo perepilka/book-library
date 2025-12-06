@@ -3,7 +3,7 @@ package model;
 public class Reader {
 
   private Long id;
-  private String name;
+  private final String name;
 
   public Reader(String name) {
     this.name = name;
@@ -14,20 +14,12 @@ public class Reader {
     this.name = name;
   }
 
-  public Long getId() {
-    return id;
-  }
-
   public void setId(Long id) {
     this.id = id;
   }
 
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   @Override

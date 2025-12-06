@@ -13,9 +13,9 @@ import util.DatabaseInitializer;
 
 public class App {
 
-  private ReaderService readerService = new ReaderService();
-  private BookService bookService = new BookService(readerService);
-  private Scanner scanner = new Scanner(System.in);
+  private final ReaderService readerService = new ReaderService();
+  private final BookService bookService = new BookService(readerService);
+  private final Scanner scanner = new Scanner(System.in);
 
   private boolean exitFlag = false;
 

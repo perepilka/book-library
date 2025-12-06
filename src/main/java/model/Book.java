@@ -3,8 +3,8 @@ package model;
 public class Book {
 
   private Long id;
-  private String name;
-  private String author;
+  private final String name;
+  private final String author;
   private Long readerId;
 
   public Book(String name, String author) {
@@ -39,14 +39,6 @@ public class Book {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public void setAuthor(String author) {
-    this.author = author;
   }
 
   public void setReaderId(Long readerId) {
