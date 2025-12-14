@@ -14,6 +14,11 @@ public class Reader {
     this.name = name;
   }
 
+  public Reader(Reader reader) {
+    this.id = reader.id;
+    this.name = reader.name;
+  }
+
   public void setId(Long id) {
     this.id = id;
   }

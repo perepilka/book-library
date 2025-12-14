@@ -1,10 +1,10 @@
 package repository;
 
+import exception.LibraryException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import model.Reader;
 
 import java.util.ArrayList;
@@ -20,15 +20,11 @@ public class ReaderRepository {
         ResultSet rs = stmt.executeQuery()) {
       List<Reader> readers = new ArrayList<>();
       while (rs.next()) {
-        Long id = rs.getLong("id");
-        String name = rs.getString("fullname");
-
-        readers.add(new Reader(id, name));
+        readers.add(mapToReader(rs));
       }
       return readers;
     } catch (SQLException e) {
-      System.err.println(e.getMessage());
-      return Collections.emptyList();
+      throw new LibraryException("Error fetching readers from database: " + e.getMessage());
     }
   }
 
@@ -39,14 +35,13 @@ public class ReaderRepository {
       stmt.setLong(1, id);
       try (ResultSet rs = stmt.executeQuery()) {
         if (rs.next()) {
-          Long bookId = rs.getLong("id");
-          String fullname = rs.getString("fullname");
-          Reader reader = new Reader(bookId, fullname);
+          Reader reader = new Reader(mapToReader(rs));
           return Optional.of(reader);
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new LibraryException("Error finding reader by ID: " + e.getMessage());
+
     }
     return Optional.empty();
   }
@@ -66,5 +61,11 @@ public class ReaderRepository {
       throw new RuntimeException("Reader was not saved: " + e.getMessage(), e);
     }
     return reader;
+  }
+
+  private Reader mapToReader(ResultSet rs) throws SQLException {
+    Long id = rs.getLong("id");
+    String name = rs.getString("fullname");
+    return new Reader(id, name);
   }
 }

@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import model.Book;
 
 import java.util.ArrayList;
@@ -22,17 +21,11 @@ public class BookRepository {
         ResultSet rs = stmt.executeQuery()) {
       List<Book> books = new ArrayList<>();
       while (rs.next()) {
-        Long id = rs.getLong("id");
-        String name = rs.getString("title");
-        String author = rs.getString("fullname");
-        Long readerId = (Long) rs.getObject("reader_id");
-
-        books.add(new Book(id, name, author, readerId));
+        books.add(mapToBook(rs));
       }
       return books;
     } catch (SQLException e) {
-      System.err.println(e.getMessage());
-      return Collections.emptyList();
+      throw new LibraryException("Error fetching books from database: " + e.getMessage());
     }
   }
 
@@ -44,16 +37,12 @@ public class BookRepository {
       stmt.setLong(1, id);
       try (ResultSet rs = stmt.executeQuery()) {
         if (rs.next()) {
-          Long book_id = rs.getLong("id");
-          String title = rs.getString("title");
-          String name = rs.getString("fullname");
-          Long readerId = (Long) rs.getObject("reader_id");
-          Book book = new Book(book_id, title, name, readerId);
+          Book book = new Book(mapToBook(rs));
           return Optional.of(book);
         }
       }
     } catch (SQLException e) {
-      System.err.println(e.getMessage());
+      throw new LibraryException("Error finding book by ID: " + e.getMessage());
     }
     return Optional.empty();
   }
@@ -64,7 +53,7 @@ public class BookRepository {
     try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql,
             java.sql.Statement.RETURN_GENERATED_KEYS)) {
-      stmt.setString(1, book.getName());
+      stmt.setString(1, book.getTitle());
       stmt.setString(2, book.getAuthor());
       stmt.executeUpdate();
       try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -87,7 +76,7 @@ public class BookRepository {
 
     try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setString(1, bookToUpdate.getName());
+      stmt.setString(1, bookToUpdate.getTitle());
       stmt.setString(2, bookToUpdate.getAuthor());
       if (bookToUpdate.getReaderId() != null) {
         stmt.setLong(3, bookToUpdate.getReaderId());
@@ -100,5 +89,14 @@ public class BookRepository {
       throw new LibraryException("Book was not updated, caused by sql problem: " + e.getMessage());
     }
     return bookToUpdate;
+  }
+
+  private Book mapToBook(ResultSet rs) throws SQLException {
+    Long id = rs.getLong("id");
+    String title = rs.getString("title");
+    String author = rs.getString("fullname");
+    Long readerId = (Long) rs.getObject("reader_id");
+
+    return new Book(id, title, author, readerId);
   }
 }

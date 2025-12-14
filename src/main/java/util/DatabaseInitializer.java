@@ -17,7 +17,7 @@ public class DatabaseInitializer {
       sql = getSqlFromFile("data.sql");
       executeSqlScript(sql);
     }catch (Exception e){
-      System.err.println(e.getMessage());
+      throw new RuntimeException("CRITICAL: Database initialization failed. " + e.getMessage(), e);
     }
 
   }

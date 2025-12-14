@@ -21,7 +21,14 @@ public class App {
 
 
   public void run() {
-    DatabaseInitializer.initDatabase();
+    try {
+      DatabaseInitializer.initDatabase();
+    } catch (RuntimeException e) {
+      System.err.println(e.getMessage());
+      System.out.println("Application cannot start due to database error. Please contact support.");
+      return; // Exit the app immediately
+    }
+
     System.out.println("WELCOME TO THE LIBRARY!");
     menu();
     scanner.close();
@@ -76,7 +83,7 @@ public class App {
 
   private void addNewBook() {
     System.out.println(
-        "Please enter new book name and author separated by “/”. Like this: name / author");
+        "Please enter new book title and author separated by “/”. Like this: title / author");
     try {
       var createdBook = bookService.save(scanner.nextLine());
       System.out.println(createdBook);

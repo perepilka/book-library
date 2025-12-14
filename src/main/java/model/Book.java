@@ -3,30 +3,37 @@ package model;
 public class Book {
 
   private Long id;
-  private final String name;
+  private final String title;
   private final String author;
   private Long readerId;
 
-  public Book(String name, String author) {
+  public Book(String title, String author) {
     id = null;
-    this.name = name;
+    this.title = title;
     this.author = author;
     readerId = null;
   }
 
-  public Book(Long id, String name, String author, Long readerId) {
+  public Book(Long id, String title, String author, Long readerId) {
     this.id = id;
-    this.name = name;
+    this.title = title;
     this.author = author;
     this.readerId = readerId;
+  }
+
+  public Book(Book book) {
+    this.id = book.id;
+    this.title = book.title;
+    this.author = book.author;
+    this.readerId = book.readerId;
   }
 
   public Long getId() {
     return id;
   }
 
-  public String getName() {
-    return name;
+  public String getTitle() {
+    return title;
   }
 
   public String getAuthor() {
@@ -47,6 +54,6 @@ public class Book {
 
   @Override
   public String toString() {
-    return id + ". \"" + name + "\" - " + author + ". Borrowed by: " + readerId;
+    return id + ". \"" + title + "\" - " + author + ". Borrowed by: " + readerId;
   }
 }
