@@ -16,8 +16,8 @@ public class ReaderRepository {
 
   public List<Reader> findAll() {
     try (Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM readers");
-        ResultSet rs = stmt.executeQuery()) {
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM readers")) {
+      ResultSet rs = stmt.executeQuery();
       List<Reader> readers = new ArrayList<>();
       while (rs.next()) {
         readers.add(mapToReader(rs));
@@ -41,7 +41,6 @@ public class ReaderRepository {
       }
     } catch (SQLException e) {
       throw new LibraryException("Error finding reader by ID: " + e.getMessage());
-
     }
     return Optional.empty();
   }
@@ -49,7 +48,8 @@ public class ReaderRepository {
   public Reader save(Reader reader) {
     String sql = "insert into readers (fullname) values (?)";
     try (Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement stmt = conn.prepareStatement(sql,
+            java.sql.Statement.RETURN_GENERATED_KEYS)) {
       stmt.setString(1, reader.getName());
       stmt.executeUpdate();
       try (ResultSet rs = stmt.getGeneratedKeys()) {
