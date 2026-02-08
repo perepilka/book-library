@@ -5,6 +5,7 @@ import exception.ObjectNotFoundException;
 import model.Book;
 import model.Reader;
 import service.BookService;
+import service.LibraryService;
 import service.ReaderService;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class App {
 
   private final ReaderService readerService = new ReaderService();
   private final BookService bookService = new BookService(readerService);
+  private final LibraryService libraryService = new LibraryService(readerService, bookService);
   private final Scanner scanner = new Scanner(System.in);
 
   private boolean exitFlag = false;
@@ -46,6 +48,8 @@ public class App {
           [6] RETURN A BOOK TO THE LIBRARY
           [7] SHOW ALL BORROWED BOOK BY USER ID
           [8] SHOW CURRENT READER OF A BOOK WITH ID
+          [9] SHOW ALL READERS WITH THEIR BORROWED BOOKS
+          [10] SHOW ALL BOOKS WITH THEIR CURRENT READERS
           TYPE “EXIT” TO STOP THE PROGRAM AND EXIT!""");
 
       switch (scanner.nextLine().trim().toUpperCase()) {
@@ -57,6 +61,8 @@ public class App {
         case "6" -> returnBook();
         case "7" -> printBorrowedBooks();
         case "8" -> printBookReader();
+        case "9" -> printAllReadersWithBorrowedBooks();
+        case "9" -> printAllBooksWithReaders();
         case "EXIT" -> exit();
         default -> System.out.println("WRONG INPUT!");
       }
@@ -135,6 +141,14 @@ public class App {
     } catch (ObjectNotFoundException | LibraryException exception) {
       System.out.println(exception.getMessage());
     }
+  }
+
+  private void printAllReadersWithBorrowedBooks() {
+
+  }
+
+
+  private void printAllBooksWithReaders() {
   }
 
   private void exit() {
