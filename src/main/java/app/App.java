@@ -70,11 +70,19 @@ public class App {
   }
 
   private void printAllBooks() {
-    System.out.println(bookService.findAll());
+    try {
+      System.out.println(bookService.findAll());
+    } catch (LibraryException e) {
+      System.err.println(e.getMessage());
+    }
   }
 
   private void printAllReaders() {
-    System.out.println(readerService.findAll());
+    try {
+      System.out.println(readerService.findAll());
+    } catch (LibraryException e) {
+      System.err.println(e.getMessage());
+    }
   }
 
   private void registerNewReader() {
@@ -83,7 +91,7 @@ public class App {
       var createdReader = readerService.save(scanner.nextLine());
       System.out.println(createdReader);
     } catch (LibraryException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -94,7 +102,7 @@ public class App {
       var createdBook = bookService.save(scanner.nextLine());
       System.out.println(createdBook);
     } catch (LibraryException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -105,7 +113,7 @@ public class App {
       var borrowedBook = bookService.borrowBook(scanner.nextLine());
       System.out.println(borrowedBook);
     } catch (LibraryException | ObjectNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -115,7 +123,7 @@ public class App {
       var returnedBook = bookService.returnBook(scanner.nextLine());
       System.out.println(returnedBook);
     } catch (LibraryException | ObjectNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -129,7 +137,7 @@ public class App {
         System.out.println(books);
       }
     } catch (LibraryException | ObjectNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -139,7 +147,7 @@ public class App {
       Reader reader = bookService.getReaderByBookId(scanner.nextLine());
       System.out.println(reader);
     } catch (ObjectNotFoundException | LibraryException exception) {
-      System.out.println(exception.getMessage());
+      System.err.println(exception.getMessage());
     }
   }
 

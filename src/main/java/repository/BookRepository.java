@@ -17,8 +17,9 @@ public class BookRepository {
 
   public List<Book> findAll() {
     try (Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM books");
-        ResultSet rs = stmt.executeQuery()) {
+        PreparedStatement stmt = conn.prepareStatement(
+            "SELECT * FROM books")) {
+      ResultSet rs = stmt.executeQuery();
       List<Book> books = new ArrayList<>();
       while (rs.next()) {
         books.add(mapToBook(rs));
@@ -32,7 +33,8 @@ public class BookRepository {
   public Optional<Book> findById(Long id) {
     String sql = "SELECT * FROM books where id = ?";
     try (Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(
+            sql)) {
 
       stmt.setLong(1, id);
       try (ResultSet rs = stmt.executeQuery()) {
@@ -51,8 +53,8 @@ public class BookRepository {
     String sql = "insert into books (title, fullname) values (?, ?)";
 
     try (Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql,
-            java.sql.Statement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement stmt = conn.prepareStatement(
+            sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
       stmt.setString(1, book.getTitle());
       stmt.setString(2, book.getAuthor());
       stmt.executeUpdate();
@@ -71,11 +73,11 @@ public class BookRepository {
     String sql = "update books set title = ?, fullname = ?, reader_id = ? where id = ?";
     var id = bookToUpdate.getId();
 
-    findById(id)
-        .orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + id));
+    findById(id).orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + id));
 
     try (Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(
+            sql)) {
       stmt.setString(1, bookToUpdate.getTitle());
       stmt.setString(2, bookToUpdate.getAuthor());
       if (bookToUpdate.getReaderId() != null) {
