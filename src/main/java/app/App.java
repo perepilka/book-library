@@ -62,7 +62,7 @@ public class App {
         case "7" -> printBorrowedBooks();
         case "8" -> printBookReader();
         case "9" -> printAllReadersWithBorrowedBooks();
-        case "9" -> printAllBooksWithReaders();
+        case "10" -> printAllBooksWithReaders();
         case "EXIT" -> exit();
         default -> System.out.println("WRONG INPUT!");
       }
@@ -152,11 +152,20 @@ public class App {
   }
 
   private void printAllReadersWithBorrowedBooks() {
-
+    try {
+      System.out.println(libraryService.getAllReadersWithBorrowedBooks());
+    } catch (LibraryException e) {
+      System.err.println(e.getMessage());
+    }
   }
 
 
   private void printAllBooksWithReaders() {
+    try {
+      System.out.println(libraryService.getAllBooksWithReaders());
+    } catch (LibraryException e) {
+      System.err.println(e.getMessage());
+    }
   }
 
   private void exit() {
