@@ -1,5 +1,6 @@
 package util;
 
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -11,12 +12,14 @@ import java.util.stream.Collectors;
 public class DatabaseInitializer {
 
   public static void initDatabase() {
-    try{
+    try {
       String sql = getSqlFromFile("schema.sql");
       executeSqlScript(sql);
-      sql = getSqlFromFile("data.sql");
-      executeSqlScript(sql);
-    }catch (Exception e){
+      if (isDatabaseEmpty()) {
+        sql = getSqlFromFile("data.sql");
+        executeSqlScript(sql);
+      }
+    } catch (Exception e) {
       throw new RuntimeException("CRITICAL: Database initialization failed. " + e.getMessage(), e);
     }
 
@@ -49,6 +52,17 @@ public class DatabaseInitializer {
         }
       }
     }
+  }
+
+  private static boolean isDatabaseEmpty() throws SQLException {
+    try (Connection conn = DatabaseConnection.getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT count(*) FROM readers")) {
+      if (rs.next()) {
+        return rs.getInt(1) == 0;
+      }
+    }
+    return true;
   }
 
 
