@@ -28,9 +28,9 @@ public class StringUtil {
     }
   }
 
-  public static void checkId(String bookId) {
-    if (!bookId.matches("-?\\d+(\\\\.\\d+)?")) {
-      throw new LibraryException("Id must contain numbers!");
+  public static void checkId(String id) {
+    if (id == null || !id.matches("\\d+")) {
+      throw new LibraryException("Id must be a valid positive integer!");
     }
   }
 
