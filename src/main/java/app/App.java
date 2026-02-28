@@ -9,17 +9,26 @@ import service.ReaderService;
 
 import java.util.List;
 import java.util.Scanner;
+import util.DatabaseInitializer;
 
 public class App {
 
-  private ReaderService readerService = new ReaderService();
-  private BookService bookService = new BookService(readerService);
-  private Scanner scanner = new Scanner(System.in);
+  private final ReaderService readerService = new ReaderService();
+  private final BookService bookService = new BookService(readerService);
+  private final Scanner scanner = new Scanner(System.in);
 
   private boolean exitFlag = false;
 
 
   public void run() {
+    try {
+      DatabaseInitializer.initDatabase();
+    } catch (RuntimeException e) {
+      System.err.println(e.getMessage());
+      System.out.println("Application cannot start due to database error. Please contact support.");
+      return; // Exit the app immediately
+    }
+
     System.out.println("WELCOME TO THE LIBRARY!");
     menu();
     scanner.close();
@@ -55,11 +64,19 @@ public class App {
   }
 
   private void printAllBooks() {
-    System.out.println(bookService.findAll());
+    try {
+      System.out.println(bookService.findAll());
+    } catch (LibraryException e) {
+      System.err.println(e.getMessage());
+    }
   }
 
   private void printAllReaders() {
-    System.out.println(readerService.findAll());
+    try {
+      System.out.println(readerService.findAll());
+    } catch (LibraryException e) {
+      System.err.println(e.getMessage());
+    }
   }
 
   private void registerNewReader() {
@@ -68,18 +85,18 @@ public class App {
       var createdReader = readerService.save(scanner.nextLine());
       System.out.println(createdReader);
     } catch (LibraryException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
   private void addNewBook() {
     System.out.println(
-        "Please enter new book name and author separated by “/”. Like this: name / author");
+        "Please enter new book title and author separated by “/”. Like this: title / author");
     try {
       var createdBook = bookService.save(scanner.nextLine());
       System.out.println(createdBook);
     } catch (LibraryException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -90,7 +107,7 @@ public class App {
       var borrowedBook = bookService.borrowBook(scanner.nextLine());
       System.out.println(borrowedBook);
     } catch (LibraryException | ObjectNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -100,7 +117,7 @@ public class App {
       var returnedBook = bookService.returnBook(scanner.nextLine());
       System.out.println(returnedBook);
     } catch (LibraryException | ObjectNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -114,7 +131,7 @@ public class App {
         System.out.println(books);
       }
     } catch (LibraryException | ObjectNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -124,7 +141,7 @@ public class App {
       Reader reader = bookService.getReaderByBookId(scanner.nextLine());
       System.out.println(reader);
     } catch (ObjectNotFoundException | LibraryException exception) {
-      System.out.println(exception.getMessage());
+      System.err.println(exception.getMessage());
     }
   }
 

@@ -3,16 +3,20 @@ package model;
 public class Reader {
 
   private Long id;
-  private String name;
-  private static long counter = 0;
+  private final String name;
 
   public Reader(String name) {
-    this.id = counter++;
     this.name = name;
   }
 
-  public Long getId() {
-    return id;
+  public Reader(Long id, String name) {
+    this.id = id;
+    this.name = name;
+  }
+
+  public Reader(Reader reader) {
+    this.id = reader.id;
+    this.name = reader.name;
   }
 
   public void setId(Long id) {
@@ -21,10 +25,6 @@ public class Reader {
 
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   @Override

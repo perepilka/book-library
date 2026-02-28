@@ -13,7 +13,7 @@ import java.util.Optional;
 public class BookService {
 
   private final BookRepository bookRepository;
-  private ReaderService readerService;
+  private final ReaderService readerService;
 
   public BookService(ReaderService readerService) {
     this.bookRepository = new BookRepository();

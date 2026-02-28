@@ -2,25 +2,38 @@ package model;
 
 public class Book {
 
-  private final Long id;
-  private String name;
-  private String author;
+  private Long id;
+  private final String title;
+  private final String author;
   private Long readerId;
-  private static long count = 0;
 
-  public Book(String name, String author) {
-    this.id = count++;
-    this.name = name;
+  public Book(String title, String author) {
+    id = null;
+    this.title = title;
     this.author = author;
-    this.readerId = null;
+    readerId = null;
+  }
+
+  public Book(Long id, String title, String author, Long readerId) {
+    this.id = id;
+    this.title = title;
+    this.author = author;
+    this.readerId = readerId;
+  }
+
+  public Book(Book book) {
+    this.id = book.id;
+    this.title = book.title;
+    this.author = book.author;
+    this.readerId = book.readerId;
   }
 
   public Long getId() {
     return id;
   }
 
-  public String getName() {
-    return name;
+  public String getTitle() {
+    return title;
   }
 
   public String getAuthor() {
@@ -31,12 +44,8 @@ public class Book {
     return readerId;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public void setAuthor(String author) {
-    this.author = author;
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public void setReaderId(Long readerId) {
@@ -45,6 +54,6 @@ public class Book {
 
   @Override
   public String toString() {
-    return id + ". \"" + name + "\" - " + author + ". Borrowed by: " + readerId;
+    return id + ". \"" + title + "\" - " + author + ". Borrowed by: " + readerId;
   }
 }
