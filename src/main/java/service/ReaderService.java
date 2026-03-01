@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class ReaderService {
 
-  private ReaderRepository readerRepository;
+  private final ReaderRepository readerRepository;
 
   public ReaderService() {
     this.readerRepository = new ReaderRepository();

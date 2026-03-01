@@ -1,7 +1,6 @@
 package repository;
 
 import exception.LibraryException;
-import exception.ObjectNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -64,7 +63,7 @@ public class BookRepository {
         }
       }
     } catch (SQLException e) {
-      throw new LibraryException("Book was not saved, caused by sql problem: " + e.getMessage());
+      throw new LibraryException("Book was not saved, caused by database: " + e.getMessage());
     }
     return book;
   }
@@ -72,8 +71,6 @@ public class BookRepository {
   public Book updateBook(Book bookToUpdate) {
     String sql = "update books set title = ?, fullname = ?, reader_id = ? where id = ?";
     var id = bookToUpdate.getId();
-
-    findById(id).orElseThrow(() -> new ObjectNotFoundException("Book not found, id: " + id));
 
     try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement(
@@ -88,7 +85,7 @@ public class BookRepository {
       stmt.setLong(4, id);
       stmt.executeUpdate();
     } catch (SQLException e) {
-      throw new LibraryException("Book was not updated, caused by sql problem: " + e.getMessage());
+      throw new LibraryException("Book was not updated, caused by database: " + e.getMessage());
     }
     return bookToUpdate;
   }
