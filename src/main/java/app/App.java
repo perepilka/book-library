@@ -16,7 +16,7 @@ public class App {
 
   private final ReaderService readerService = new ReaderService();
   private final BookService bookService = new BookService(readerService);
-  private final LibraryService libraryService = new LibraryService(readerService, bookService);
+  private final LibraryService libraryService = new LibraryService();
   private final Scanner scanner = new Scanner(System.in);
 
   private boolean exitFlag = false;
