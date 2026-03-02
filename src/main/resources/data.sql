@@ -7,6 +7,6 @@ values
 insert into books(title, fullname, reader_id)
 values
     ('A Tale of Two Cities', 'Charles Dickens', null),
-    ('The Little Prince"', 'Charles Dickens', 1),
+    ('The Little Prince', 'Charles Dickens', 1),
     ('The Alchemist', 'Charles Dickens', null);
 
