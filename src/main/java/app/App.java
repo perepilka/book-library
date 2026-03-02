@@ -2,6 +2,7 @@ package app;
 
 import exception.LibraryException;
 import exception.ObjectNotFoundException;
+import java.util.stream.Collectors;
 import model.Book;
 import model.Reader;
 import service.BookService;
@@ -153,16 +154,40 @@ public class App {
 
   private void printAllReadersWithBorrowedBooks() {
     try {
-      System.out.println(libraryService.getAllReadersWithBorrowedBooks());
+      var data = libraryService.getAllReadersWithBorrowedBooks();
+      for (var entry : data.entrySet()) {
+        Reader reader = entry.getKey();
+        List<Book> books = entry.getValue();
+
+        if (books.isEmpty()) {
+          System.out.println(reader.toString() + " - (no books borrowed)");
+        } else {
+          System.out.println(reader.toString() + " - " + books.stream()
+              .map(book -> book.getId() + "." + book.getTitle() + " - " + book.getAuthor())
+              .collect(Collectors.joining(", "))
+          );
+        }
+      }
     } catch (LibraryException e) {
       System.err.println(e.getMessage());
     }
   }
 
-
   private void printAllBooksWithReaders() {
     try {
-      System.out.println(libraryService.getAllBooksWithReaders());
+      var data = libraryService.getAllBooksWithReaders();
+      for (var entry : data.entrySet()) {
+        Book book = entry.getKey();
+        String readerName = entry.getValue();
+
+        if (readerName == null && book.getReaderId() == null) {
+          System.out.println(
+              book.getId() + "." + book.getTitle() + " - " + book.getAuthor() + " - (available)");
+        } else {
+          System.out.println(
+              book.getId() + "." + book.getTitle() + " - " + book.getAuthor() + " - " + readerName);
+        }
+      }
     } catch (LibraryException e) {
       System.err.println(e.getMessage());
     }

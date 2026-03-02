@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Reader {
 
   private Long id;
@@ -23,12 +25,22 @@ public class Reader {
     this.id = id;
   }
 
-  public Long getId() {
-    return id;
-  }
-
   public String getName() {
     return name;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Reader reader = (Reader) o;
+    return Objects.equals(id, reader.id) && Objects.equals(name, reader.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name);
   }
 
   @Override

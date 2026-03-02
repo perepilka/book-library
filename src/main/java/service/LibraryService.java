@@ -1,6 +1,9 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
+import model.Book;
+import model.Reader;
 import repository.LibraryRepository;
 
 public class LibraryService {
@@ -11,11 +14,11 @@ public class LibraryService {
     this.libraryRepository = new LibraryRepository();
   }
 
-  public List<String> getAllReadersWithBorrowedBooks(){
+  public Map<Reader, List<Book>> getAllReadersWithBorrowedBooks() {
     return libraryRepository.findAllReadersWithBorrowedBooks();
   }
 
-  public List<String> getAllBooksWithReaders() {
+  public Map<Book, String> getAllBooksWithReaders() {
     return libraryRepository.findAllBooksWithReaders();
   }
 }
