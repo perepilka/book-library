@@ -11,8 +11,8 @@ public class ReaderService {
 
   private final ReaderRepository readerRepository;
 
-  public ReaderService() {
-    this.readerRepository = new ReaderRepository();
+  public ReaderService(ReaderRepository readerRepository) {
+    this.readerRepository = readerRepository;
   }
 
   public List<Reader> findAll() {

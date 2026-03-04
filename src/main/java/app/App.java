@@ -5,6 +5,8 @@ import exception.ObjectNotFoundException;
 import java.util.stream.Collectors;
 import model.Book;
 import model.Reader;
+import repository.BookRepository;
+import repository.ReaderRepository;
 import service.BookService;
 import service.LibraryService;
 import service.ReaderService;
@@ -15,9 +17,13 @@ import util.DatabaseInitializer;
 
 public class App {
 
-  private final ReaderService readerService = new ReaderService();
-  private final BookService bookService = new BookService(readerService);
+  ReaderRepository readerRepository = new ReaderRepository();
+  BookRepository bookRepository = new BookRepository();
+
+  private final ReaderService readerService = new ReaderService(readerRepository);
+  private final BookService bookService = new BookService(readerService, bookRepository);
   private final LibraryService libraryService = new LibraryService();
+
   private final Scanner scanner = new Scanner(System.in);
 
   private boolean exitFlag = false;
